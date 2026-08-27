@@ -176,14 +176,14 @@ func _update_dock_visuals() -> void:
 		else: bar.value = 0.0; icon.color = DOCK_FREE_COLOR; label.text = "Док %d: своб." % [i + 1]
 
 func _refresh_all() -> void:
-	var pulse := lerp(
+	var pulse: float = lerpf(
 		GameBalance.PULSE_MIN_ALPHA,
 		GameBalance.PULSE_MAX_ALPHA,
 		sin(elapsed_time * TAU / GameBalance.PULSE_PERIOD_SECONDS) * 0.5 + 0.5
 	)
 
 	for pos in cell_buttons.keys():
-		var cell = grid.get_cell(pos.x, pos.y)
+		var cell: GridCell = grid.get_cell(pos.x, pos.y)
 		var button: Button = cell_buttons[pos]
 
 		match cell.state:

@@ -47,13 +47,23 @@ func is_border(x: int, y: int) -> bool:
 	return x == 0 or y == 0 or x == width - 1 or y == height - 1
 
 
-func get_neighbors(x: int, y: int) -> Array:
-	var result: Array = []
-	for offset in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-		var nx := x + offset.x
-		var ny := y + offset.y
+func get_neighbors(x: int, y: int) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+
+	var offsets: Array[Vector2i] = [
+		Vector2i(1, 0),
+		Vector2i(-1, 0),
+		Vector2i(0, 1),
+		Vector2i(0, -1),
+	]
+
+	for offset: Vector2i in offsets:
+		var nx: int = x + offset.x
+		var ny: int = y + offset.y
+
 		if is_inside(nx, ny):
 			result.append(Vector2i(nx, ny))
+
 	return result
 
 
