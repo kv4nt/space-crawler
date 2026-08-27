@@ -10,20 +10,29 @@ config_version=5
 
 [application]
 
-config/name="Новый игровой проект"
+config/name="Starvein: Frontier Protocol"
+config/description="Мобильная sci-fi головоломка: планируйте порядок запуска флота кораблей и раскрывайте скрытые жилы минералов в слоистых астероидах."
+run/main_scene="res://scenes/app/Main.tscn"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameBalance="*res://scripts/autoload/GameBalance.gd"
+SaveService="*res://scripts/autoload/SaveService.gd"
+AudioService="*res://scripts/autoload/AudioService.gd"
+LevelService="*res://scripts/autoload/LevelService.gd"
+GameState="*res://scripts/autoload/GameState.gd"
+
 [display]
 
+window/size/viewport_width=1080
+window/size/viewport_height=1920
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-
-[physics]
-
-3d/physics_engine="Jolt Physics"
+window/handheld/orientation="portrait"
 
 [rendering]
 
-rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
