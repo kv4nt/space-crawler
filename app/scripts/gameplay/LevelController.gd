@@ -168,7 +168,7 @@ func _spawn_burst(global_pos: Vector2, color: Color) -> void:
 
 func _update_dock_visuals() -> void:
 	for i in range(dock_manager.docks.size()):
-		var dock = dock_manager.docks[i]; var bar: ProgressBar = dock_progress_bars[i]; var icon: ColorRect = dock_ship_icons[i]; var label: Label = dock_labels[i]
+		var dock = Dictionary = dock_manager.docks[i]; var bar: ProgressBar = dock_progress_bars[i]; var icon: ColorRect = dock_ship_icons[i]; var label: Label = dock_labels[i]
 		if dock.busy:
 			bar.value = 1.0 - dock.timer_left / dock_manager.mine_duration
 			icon.color = GameBalance.MINERAL_COLORS[grid.get_cell(dock.target.x, dock.target.y).color]
