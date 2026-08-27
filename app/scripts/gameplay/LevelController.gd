@@ -168,7 +168,7 @@ func _spawn_burst(global_pos: Vector2, color: Color) -> void:
 
 func _update_dock_visuals() -> void:
 	for i in range(dock_manager.docks.size()):
-		var dock = Dictionary = dock_manager.docks[i]; var bar: ProgressBar = dock_progress_bars[i]; var icon: ColorRect = dock_ship_icons[i]; var label: Label = dock_labels[i]
+		var dock: Dictionary = dock_manager.docks[i]; var bar: ProgressBar = dock_progress_bars[i]; var icon: ColorRect = dock_ship_icons[i]; var label: Label = dock_labels[i]
 		if dock.busy:
 			bar.value = 1.0 - dock.timer_left / dock_manager.mine_duration
 			icon.color = GameBalance.MINERAL_COLORS[grid.get_cell(dock.target.x, dock.target.y).color]
@@ -176,15 +176,52 @@ func _update_dock_visuals() -> void:
 		else: bar.value = 0.0; icon.color = DOCK_FREE_COLOR; label.text = "Док %d: своб." % [i + 1]
 
 func _refresh_all() -> void:
-	var pulse := lerp(GameBalance.PULSE_MIN_ALPHA, GameBalance.PULSE_MAX_ALPHA, sin(elapsed_time * TAU / GameBalance.PULSE_PERIOD_SECONDS) * 0.5 + 0.5)
+	var pulse := lerp(
+		GameBalance.PULSE_MIN_ALPHA,
+		GameBalance.PULSE_MAX_ALPHA,
+		sin(elapsed_time * TAU / GameBalance.PULSE_PERIOD_SECONDS) * 0.5 + 0.5
+	)
+
 	for pos in cell_buttons.keys():
-		var cell = grid.get_cell(pos.x, pos.y); var button: Button = cell_buttons[pos]
-		if cell.state == GridCell.State.HIDDEN: button.text = "?"; button.disabled = true; button.modulate = Color.WHITE; button.self_modulate = HIDDEN_COLOR
-		elif cell.state == GridCell.State.REVEALED: button.text = "?"; button.disabled = true; button.modulate = Color.WHITE; button.self_modulate = REVEALED_COLOR
-		elif cell.state == GridCell.State.EXPOSED:
-			button.self_modulate = GameBalance.MINERAL_COLORS[cell.color]
-			button.text = "*" if cell.assigned_dock == -1 else "…"; button.disabled = cell.assigned_dock != -1 or game_over; button.modulate = Color(1, 1, 1, pulse if cell.assigned_dock == -1 else 0.6)
-		else: button.text = "v"; button.disabled = true; button.modulate = Color.WHITE; button.self_modulate = MINED_COLOR
+		var cell = grid.get_cell(pos.x, pos.y)
+		var button: Button = cell_buttons[pos]
+
+		match cell.state:
+			GridCell.State.HIDDEN:
+				button.text = "?"
+				button.disabled = true
+				button.modulate = Color.WHITE
+				button.self_modulate = HIDDEN_COLOR
+
+			GridCell.State.REVEALED:
+				button.text = "?"
+				button.disabled = true
+				button.modulate = Color.WHITE
+				button.self_modulate = REVEALED_COLOR
+
+			GridCell.State.EXPOSED:
+				button.self_modulate = GameBalance.MINERAL_COLORS[cell.color]
+
+				if cell.assigned_dock == -1:
+					button.text = "*"
+					button.disabled = game_over
+					button.modulate = Color(1, 1, 1, pulse)
+				else:
+					button.text = "…"
+					button.disabled = true
+					button.modulate = Color(1, 1, 1, 0.6)
+
+			GridCell.State.MINED:
+				button.text = "v"
+				button.disabled = true
+				button.modulate = Color.WHITE
+				button.self_modulate = MINED_COLOR
+
 	if not game_over:
-		for c in range(grid.color_count): progress_value_labels[c].text = "%d/%d" % [grid.mined_count_by_color[c], GameBalance.TARGET_PER_COLOR]
+		for c in range(grid.color_count):
+			progress_value_labels[c].text = "%d/%d" % [
+				grid.mined_count_by_color[c],
+				GameBalance.TARGET_PER_COLOR,
+			]
+
 		status_label.text = "Выберите доступную (*) клетку и назначьте её на свободный док"
