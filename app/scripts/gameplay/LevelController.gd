@@ -2844,5 +2844,17 @@ func _refresh_cell_visual(pos: Vector2i) -> void:
 			else:
 				panel.set_overlay(EmptyCellPanel.OverlayMode.NONE)
 				var mineral := _mineral_color(cell.color)
+				if cell.modifier == GridCell.Modifier.FROZEN and cell.frost_hits > 0:
+					panel.add_theme_stylebox_override("panel", GameTheme.cell_frozen(mineral))
+					panel.modulate = Color.WHITE
+				elif cell.modifier == GridCell.Modifier.SEALED and cell.is_sealed():
+					panel.add_theme_stylebox_override("panel", GameTheme.cell_sealed(mineral))
+					panel.modulate = Color.WHITE
+				elif cell.modifier == GridCell.Modifier.FUSED and cell.has_fused_partner():
+					panel.add_theme_stylebox_override("panel", GameTheme.pixel_cell(mineral))
+					panel.modulate = Color(1.0, 0.92, 0.55, 1.0)
+				else:
+					panel.add_theme_stylebox_override("panel", GameTheme.pixel_cell(mineral))
+					panel.modulate = Color.WHITE
 				panel.add_theme_stylebox_override("panel", GameTheme.pixel_cell(mineral))
 				panel.modulate = Color.WHITE
