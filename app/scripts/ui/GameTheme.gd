@@ -534,44 +534,48 @@ static func hud_level_badge() -> StyleBoxFlat:
 
 static func hud_difficulty_hard() -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.42, 0.14, 0.06, 0.96)
-	s.border_color = Color(1.0, 0.55, 0.22, 0.95)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(10)
-	s.shadow_color = Color(1.0, 0.35, 0.08, 0.35)
-	s.shadow_size = 6
-	s.set_content_margin(Side.SIDE_LEFT, 10)
-	s.set_content_margin(Side.SIDE_RIGHT, 10)
-	s.set_content_margin(Side.SIDE_TOP, 2)
-	s.set_content_margin(Side.SIDE_BOTTOM, 2)
+	s.bg_color = Color(0.48, 0.20, 0.04, 0.97)
+	s.border_color = Color(1.0, 0.68, 0.18, 1.0)
+	s.set_border_width_all(3)
+	s.set_corner_radius_all(16)
+	s.shadow_color = Color(1.0, 0.45, 0.05, 0.45)
+	s.shadow_size = 9
+	s.shadow_offset = Vector2(0, 2)
+	s.set_content_margin(Side.SIDE_LEFT, 12)
+	s.set_content_margin(Side.SIDE_RIGHT, 12)
+	s.set_content_margin(Side.SIDE_TOP, 3)
+	s.set_content_margin(Side.SIDE_BOTTOM, 3)
 	return s
 
 
 static func hud_difficulty_normal() -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.10, 0.18, 0.14, 0.92)
-	s.border_color = Color(0.38, 0.72, 0.48, 0.75)
+	s.bg_color = Color(0.08, 0.22, 0.16, 0.95)
+	s.border_color = Color(0.45, 0.95, 0.62, 0.9)
 	s.set_border_width_all(2)
-	s.set_corner_radius_all(10)
-	s.set_content_margin(Side.SIDE_LEFT, 10)
-	s.set_content_margin(Side.SIDE_RIGHT, 10)
-	s.set_content_margin(Side.SIDE_TOP, 2)
-	s.set_content_margin(Side.SIDE_BOTTOM, 2)
+	s.set_corner_radius_all(16)
+	s.shadow_color = Color(0.25, 0.85, 0.45, 0.30)
+	s.shadow_size = 5
+	s.set_content_margin(Side.SIDE_LEFT, 12)
+	s.set_content_margin(Side.SIDE_RIGHT, 12)
+	s.set_content_margin(Side.SIDE_TOP, 3)
+	s.set_content_margin(Side.SIDE_BOTTOM, 3)
 	return s
 
 
 static func hud_difficulty_extreme() -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.38, 0.06, 0.12, 0.96)
-	s.border_color = Color(1.0, 0.28, 0.38, 0.95)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(10)
-	s.shadow_color = Color(1.0, 0.15, 0.25, 0.42)
-	s.shadow_size = 8
-	s.set_content_margin(Side.SIDE_LEFT, 10)
-	s.set_content_margin(Side.SIDE_RIGHT, 10)
-	s.set_content_margin(Side.SIDE_TOP, 2)
-	s.set_content_margin(Side.SIDE_BOTTOM, 2)
+	s.bg_color = Color(0.46, 0.04, 0.14, 0.98)
+	s.border_color = Color(1.0, 0.22, 0.42, 1.0)
+	s.set_border_width_all(3)
+	s.set_corner_radius_all(16)
+	s.shadow_color = Color(1.0, 0.10, 0.30, 0.55)
+	s.shadow_size = 12
+	s.shadow_offset = Vector2(0, 3)
+	s.set_content_margin(Side.SIDE_LEFT, 14)
+	s.set_content_margin(Side.SIDE_RIGHT, 14)
+	s.set_content_margin(Side.SIDE_TOP, 4)
+	s.set_content_margin(Side.SIDE_BOTTOM, 4)
 	return s
 
 
