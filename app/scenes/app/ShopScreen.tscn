@@ -1,0 +1,312 @@
+[gd_scene load_steps=9 format=3 uid="uid://shopscreen001"]
+
+[ext_resource type="Script" path="res://scripts/menu/ShopScreen.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/shop/ShopBackdrop.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/ui/shop/ShopAwning.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/ui/shop/ShopMegaBundle.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/ui/shop/ShopNavBar.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/ui/TouchScrollContainer.gd" id="6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_title"]
+bg_color = Color(0.55, 0.34, 0.18, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.95, 0.78, 0.15, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
+content_margin_left = 28.0
+content_margin_top = 10.0
+content_margin_right = 28.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chip"]
+bg_color = Color(0.12, 0.1, 0.22, 0.92)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.95, 0.78, 0.15, 0.85)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+
+[node name="ShopScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Backdrop" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Awning" type="Control" parent="Layout"]
+custom_minimum_size = Vector2(0, 92)
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("3")
+
+[node name="Header" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="HeaderSpacerL" type="Control" parent="Layout/Header"]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleBanner" type="PanelContainer" parent="Layout/Header"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_title")
+
+[node name="TitleLabel" type="Label" parent="Layout/Header/TitleBanner"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.82, 1)
+theme_override_colors/font_outline_color = Color(0.35, 0.12, 0.05, 0.85)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 34
+text = "МАГАЗИН"
+
+[node name="HeaderSpacerR" type="Control" parent="Layout/Header"]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CreditsChip" type="PanelContainer" parent="Layout/Header"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_chip")
+
+[node name="CreditsRow" type="HBoxContainer" parent="Layout/Header/CreditsChip"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CoinIcon" type="Label" parent="Layout/Header/CreditsChip/CreditsRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "⬡"
+
+[node name="CreditsLabel" type="Label" parent="Layout/Header/CreditsChip/CreditsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.28, 0.18, 0.1, 1)
+theme_override_colors/font_outline_color = Color(0.95, 0.95, 0.95, 0.35)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 28
+text = "512"
+
+[node name="AddCreditsButton" type="Button" parent="Layout/Header/CreditsChip/CreditsRow"]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+text = "+"
+
+[node name="Scroll" type="ScrollContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+script = ExtResource("6")
+
+[node name="Content" type="VBoxContainer" parent="Layout/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 18
+
+[node name="ContentMargin" type="MarginContainer" parent="Layout/Scroll/Content"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 12
+
+[node name="ContentVBox" type="VBoxContainer" parent="Layout/Scroll/Content/ContentMargin"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="MegaBundle" type="PanelContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("4")
+
+[node name="CategoryCredits" type="PanelContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_title")
+
+[node name="CategoryCreditsLabel" type="Label" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/CategoryCredits"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 22
+text = "Кредиты"
+horizontal_alignment = 1
+
+[node name="CreditGrid" type="GridContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 14
+columns = 3
+
+[node name="FreeRow" type="PanelContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox"]
+layout_mode = 2
+
+[node name="FreeHBox" type="HBoxContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/FreeRow"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="FreeInfo" type="VBoxContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/FreeRow/FreeHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="FreeIcon" type="Label" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/FreeRow/FreeHBox/FreeInfo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.28, 0.18, 0.1, 1)
+theme_override_font_sizes/font_size = 20
+text = "🎁 +100 ⬡ · раз в сутки"
+
+[node name="FreeTimerLabel" type="Label" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/FreeRow/FreeHBox/FreeInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.32, 0.18, 1)
+theme_override_font_sizes/font_size = 18
+text = "Доступно!"
+
+[node name="FreeButton" type="Button" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/FreeRow/FreeHBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "▶ ЗАБРАТЬ"
+
+[node name="CategoryLives" type="PanelContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_title")
+
+[node name="CategoryLivesLabel" type="Label" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/CategoryLives"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.88, 0.92, 1)
+theme_override_font_sizes/font_size = 22
+text = "Жизни"
+horizontal_alignment = 1
+
+[node name="LivesRow" type="PanelContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox"]
+layout_mode = 2
+
+[node name="LivesHBox" type="HBoxContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/LivesRow"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="LivesInfo" type="VBoxContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/LivesRow/LivesHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="LivesShopLabel" type="Label" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/LivesRow/LivesHBox/LivesInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.55, 0.62, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.04, 0.08, 0.9)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 28
+text = "❤ 5/5"
+
+[node name="LivesTimerLabel" type="Label" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/LivesRow/LivesHBox/LivesInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.88, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "+1 через 59:59"
+
+[node name="BuyLifeButton" type="Button" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/LivesRow/LivesHBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 22
+text = "КУПИТЬ ⬡ 150"
+
+[node name="CategoryBoosters" type="PanelContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_title")
+
+[node name="CategoryBoostersLabel" type="Label" parent="Layout/Scroll/Content/ContentMargin/ContentVBox/CategoryBoosters"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 22
+text = "Бустеры"
+horizontal_alignment = 1
+
+[node name="BoosterGrid" type="GridContainer" parent="Layout/Scroll/Content/ContentMargin/ContentVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 14
+columns = 2
+
+[node name="NavBar" type="PanelContainer" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("5")
+
+[node name="ToastLabel" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -220.0
+offset_right = 260.0
+offset_bottom = -170.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.08, 0.2, 0.9)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 24
+text = "Toast"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="Layout/Header/CreditsChip/CreditsRow/AddCreditsButton" to="." method="_on_add_credits_pressed"]
+[connection signal="pressed" from="Layout/Scroll/Content/ContentMargin/ContentVBox/FreeRow/FreeHBox/FreeButton" to="." method="_on_free_pressed"]
+[connection signal="pressed" from="Layout/Scroll/Content/ContentMargin/ContentVBox/LivesRow/LivesHBox/BuyLifeButton" to="." method="_on_buy_life_pressed"]

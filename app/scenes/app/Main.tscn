@@ -1,50 +1,260 @@
-[gd_scene load_steps=1 format=3]
+[gd_scene load_steps=7 format=3 uid="uid://mainmenu001"]
+
+[ext_resource type="Script" path="res://scripts/menu/MainMenu.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/SpaceBackground.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/ui/menu/MenuLevelBlock.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/ui/menu/MenuSideButton.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/ui/shop/ShopNavBar.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/ui/menu/MenuGameTitle.gd" id="6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play"]
+bg_color = Color(1, 0.88, 0.18, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.55, 0.32, 0.08, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+content_margin_left = 36.0
+content_margin_top = 20.0
+content_margin_right = 36.0
+content_margin_bottom = 20.0
+shadow_color = Color(0.35, 0.18, 0.02, 0.45)
+shadow_size = 14
+shadow_offset = Vector2(0, 7)
 
 [node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1")
 
-[node name="Background" type="ColorRect" parent="Main"]
+[node name="Backdrop" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.058824, 0.066667, 0.129412, 1)
+mouse_filter = 2
+script = ExtResource("2")
+star_count = 180
 
-[node name="CenterContainer" type="CenterContainer" parent="Main"]
+[node name="UILayer" type="Control" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Main/CenterContainer"]
+[node name="TopBar" type="HBoxContainer" parent="UILayer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 20.0
+offset_right = -16.0
+offset_bottom = 96.0
+grow_horizontal = 2
+theme_override_constants/separation = 10
+
+[node name="ProfileFrame" type="PanelContainer" parent="UILayer/TopBar"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 32
+
+[node name="ProfileButton" type="Button" parent="UILayer/TopBar/ProfileFrame"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 36
+text = "🚀"
+
+[node name="TopSpacer" type="Control" parent="UILayer/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LivesPill" type="PanelContainer" parent="UILayer/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LivesVBox" type="VBoxContainer" parent="UILayer/TopBar/LivesPill"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="LivesLabel" type="Label" parent="UILayer/TopBar/LivesPill/LivesVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.55, 0.62, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.04, 0.08, 0.9)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+text = "❤ 5/5"
+
+[node name="LivesTimer" type="Label" parent="UILayer/TopBar/LivesPill/LivesVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.88, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = ""
+horizontal_alignment = 1
+
+[node name="CreditsPill" type="PanelContainer" parent="UILayer/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CreditsRow" type="HBoxContainer" parent="UILayer/TopBar/CreditsPill"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CreditsLabel" type="Label" parent="UILayer/TopBar/CreditsPill/CreditsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.88, 0.28, 1)
+theme_override_colors/font_outline_color = Color(0.25, 0.12, 0, 0.9)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+text = "⬡ 500"
+
+[node name="ShopButton" type="Button" parent="UILayer/TopBar/CreditsPill/CreditsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 24
+text = "+"
+
+[node name="SettingsButton" type="Button" parent="UILayer/TopBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "⚙"
+
+[node name="SideLeft" type="VBoxContainer" parent="UILayer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 12.0
+offset_top = -160.0
+offset_right = 124.0
+offset_bottom = 180.0
+grow_vertical = 2
+theme_override_constants/separation = 18
+
+[node name="OfferBtn" type="VBoxContainer" parent="UILayer/SideLeft"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("4")
+
+[node name="SideRight" type="VBoxContainer" parent="UILayer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -124.0
+offset_top = -160.0
+offset_right = -12.0
+offset_bottom = 180.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/separation = 18
+
+[node name="FreeSideBtn" type="VBoxContainer" parent="UILayer/SideRight"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("4")
+
+[node name="GameTitle" type="Control" parent="UILayer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -390.0
+offset_right = 340.0
+offset_bottom = -190.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("6")
+
+[node name="LevelBlock" type="PanelContainer" parent="UILayer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -200.0
+offset_right = 110.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3")
+
+[node name="PlayArea" type="VBoxContainer" parent="UILayer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -260.0
+offset_right = 280.0
+offset_bottom = -130.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 0
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="Main/CenterContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 44
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-horizontal_alignment = 1
-text = "Starvein: Frontier Protocol"
-autowrap_mode = 2
-
-[node name="SubtitleLabel" type="Label" parent="Main/CenterContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-theme_override_colors/font_color = Color(0.6, 0.65, 0.8, 1)
-horizontal_alignment = 1
-text = "Foundation placeholder"
-
-[node name="PlayButton" type="Button" parent="Main/CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(280, 64)
+[node name="PlayButton" type="Button" parent="UILayer/PlayArea"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(520, 100)
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Играть (заглушка)"
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.35, 0.18, 0.06, 0.95)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 46
+theme_override_styles/normal = SubResource("StyleBoxFlat_play")
+theme_override_styles/hover = SubResource("StyleBoxFlat_play")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_play")
+theme_override_styles/focus = SubResource("StyleBoxFlat_play")
+text = "ИГРАТЬ"
+
+[node name="NavBar" type="PanelContainer" parent="UILayer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -136.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("5")

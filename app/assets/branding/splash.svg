@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <defs>
+    <linearGradient id="space" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#05081a"/>
+      <stop offset="55%" stop-color="#0d1433"/>
+      <stop offset="100%" stop-color="#1a1040"/>
+    </linearGradient>
+    <linearGradient id="ship" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9be4ff"/>
+      <stop offset="100%" stop-color="#3f86ff"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="42%" r="40%">
+      <stop offset="0%" stop-color="#ffd86b" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#ff8a00" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#space)"/>
+  <circle cx="180" cy="220" r="3" fill="#fff" opacity="0.8"/>
+  <circle cx="860" cy="180" r="2.5" fill="#fff" opacity="0.7"/>
+  <circle cx="920" cy="420" r="2" fill="#fff" opacity="0.55"/>
+  <circle cx="140" cy="520" r="2.2" fill="#fff" opacity="0.6"/>
+  <circle cx="760" cy="680" r="2" fill="#fff" opacity="0.45"/>
+  <circle cx="540" cy="760" r="340" fill="url(#halo)"/>
+  <ellipse cx="540" cy="1180" rx="360" ry="130" fill="#24172f" stroke="#6d4a8d" stroke-width="14"/>
+  <ellipse cx="540" cy="1150" rx="280" ry="92" fill="#3a2348"/>
+  <rect x="390" y="1100" width="56" height="56" rx="10" fill="#ff5d73"/>
+  <rect x="470" y="1070" width="56" height="56" rx="10" fill="#ffd34d"/>
+  <rect x="550" y="1100" width="56" height="56" rx="10" fill="#49d3ff"/>
+  <rect x="430" y="1160" width="56" height="56" rx="10" fill="#7cff8a"/>
+  <rect x="510" y="1188" width="56" height="56" rx="10" fill="#b58cff"/>
+  <path d="M540 520 L690 980 L540 920 L390 980 Z" fill="url(#ship)" stroke="#e8f7ff" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M540 590 L630 860 L540 820 L450 860 Z" fill="#e8f7ff" opacity="0.28"/>
+  <circle cx="540" cy="980" r="34" fill="#ffe27a" stroke="#fff2bf" stroke-width="8"/>
+  <text x="540" y="1410" text-anchor="middle" fill="#f4f7ff" font-family="Arial, sans-serif" font-size="72" font-weight="700">STARVEIN</text>
+  <text x="540" y="1490" text-anchor="middle" fill="#9bc4ff" font-family="Arial, sans-serif" font-size="34" letter-spacing="6">FRONTIER PROTOCOL</text>
+  <text x="540" y="1660" text-anchor="middle" fill="#7f8cb8" font-family="Arial, sans-serif" font-size="28">03@C7:0...</text>
+</svg>

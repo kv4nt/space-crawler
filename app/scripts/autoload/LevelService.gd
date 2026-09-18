@@ -1,16 +1,10 @@
 extends Node
-## LevelService — автозагрузка для загрузки и валидации уровней
-## из data/levels/*.json. Этап: Foundation. Реальная загрузка появится
-## на Этапе 4 (Прогресс); на Этапе 2 уровень собирается в коде вручную.
+## LevelService — загрузка и валидация уровней из GameBalance (JSON позже).
 
 
-func _ready() -> void:
-	pass
+func load_level(level_id: int) -> Dictionary:
+	return GameBalance.get_level_by_global_id(level_id)
 
 
-func load_level(_id: String) -> Dictionary:
-	return {}
-
-
-func validate_level(_data: Dictionary) -> bool:
-	return true
+func validate_level(data: Dictionary) -> bool:
+	return data.has("id") and data.has("width") and data.has("height")

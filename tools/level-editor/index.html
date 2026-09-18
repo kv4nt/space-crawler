@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Space Crawler — редактор уровней</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Space Crawler — редактор уровней</h1>
+    <p>Загрузите pixel-art PNG → получите JSON + превью для папки <code>app/data/levels/</code></p>
+  </header>
+
+  <main class="layout">
+    <section class="panel controls">
+      <label class="file-drop" id="dropZone">
+        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif">
+        <span>Перетащите картинку или нажмите для выбора</span>
+      </label>
+
+      <div class="field">
+        <label for="levelId">ID уровня</label>
+        <input type="number" id="levelId" min="1" max="999" value="25">
+        <small>Файлы: level_XXX.json, level_XXX.png</small>
+      </div>
+
+      <div class="field">
+        <label for="themeName">Название темы</label>
+        <input type="text" id="themeName" placeholder="Космонавт" maxlength="40">
+      </div>
+
+      <div class="field">
+        <label for="maxColors">Цветов в уровне (упрощение)</label>
+        <input type="number" id="maxColors" min="2" max="20" value="14">
+        <small>Pixel-art: 10–16 для деталей; иллюстрации: 8–12</small>
+      </div>
+
+      <p class="hint-block">Прозрачный фон → чёрный. Белый и цветной фон сохраняются.</p>
+
+      <button type="button" id="loadExampleBtn" class="btn-secondary">Загрузить эталонный пример</button>
+
+      <button type="button" id="convertBtn" disabled>Конвертировать</button>
+      <button type="button" id="downloadBtn" disabled>Скачать ZIP</button>
+
+      <div id="stats" class="stats hidden"></div>
+    </section>
+
+    <section class="panel previews">
+      <div class="preview-block">
+        <h2>Исходник</h2>
+        <canvas id="sourceCanvas" width="320" height="320"></canvas>
+      </div>
+      <div class="preview-block preview-block--edit">
+        <h2>Превью и правка</h2>
+        <div class="edit-toolbar hidden" id="editToolbar">
+          <div class="tool-row">
+            <button type="button" class="tool-btn active" data-tool="paint">Кисть</button>
+            <button type="button" class="tool-btn" data-tool="erase">Ластик</button>
+            <button type="button" class="tool-btn" data-tool="pick">Пипетка</button>
+          </div>
+          <p class="hint edit-hint">Клик или перетаскивание по клеткам. Цвет — в палитре ниже. ПКМ — ластик.</p>
+        </div>
+        <canvas id="previewCanvas" width="320" height="320"></canvas>
+        <p class="hint">Сетка как в игре. После конвертации можно править каждую клетку вручную.</p>
+      </div>
+    </section>
+
+    <section class="panel palette-panel hidden" id="palettePanel">
+      <h2>Палитра уровня</h2>
+      <p class="hint palette-hint">Нажмите цвет — он станет активной кистью.</p>
+      <div id="paletteList"></div>
+      <h3 class="subheading">Все минералы</h3>
+      <p class="hint palette-hint">Если нужного оттенка нет в палитре — выберите здесь (добавится автоматически).</p>
+      <div id="mineralPicker"></div>
+    </section>
+
+    <section class="panel json-panel hidden" id="jsonPanel">
+      <h2>JSON</h2>
+      <pre id="jsonOutput"></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Лучший результат:</strong> pixel-art PNG 32–128 px, flat colors, прозрачный фон.</p>
+    <p>Эталон: <code>tools/level-editor/examples/example_astronaut_pixel.png</code></p>
+    <p>Скопируйте файлы из ZIP в <code>app/data/levels/</code>.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

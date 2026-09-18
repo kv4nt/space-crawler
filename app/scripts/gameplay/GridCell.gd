@@ -1,14 +1,13 @@
 class_name GridCell
 extends RefCounted
-## GridCell — данные одной клетки поля добычи. Шаг 2: Вертикальный срез.
-## Состояния: hidden -> revealed -> exposed -> mined.
+## Одна клетка pixel-art поля.
 
-enum State { HIDDEN, REVEALED, EXPOSED, MINED }
+enum State { HIDDEN, EXPOSED, EMPTY }
 
-var color: int = -1
+var color: int = 0
 var state: int = State.HIDDEN
-var assigned_dock: int = -1
+var scanned: bool = false
 
 
-func _init(p_color: int = -1) -> void:
+func _init(p_color: int = 0) -> void:
 	color = p_color
