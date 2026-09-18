@@ -57,7 +57,7 @@ const PULSE_MAX_ALPHA: float = 1.0
 const MINE_BURST_PARTICLE_AMOUNT: int = 4
 const MINE_BURST_LIFETIME_SECONDS: float = 0.35
 const SHIP_TRAIL_PARTICLE_AMOUNT: int = 4
-const SHIP_TRAIL_LITE_AMOUNT: int = 0
+const SHIP_TRAIL_LITE_AMOUNT: int = 2
 const SHIP_TRAIL_LITE_THRESHOLD: int = 5
 
 const WARP_CORE_FREE_MINUTES: float = 5.0
@@ -75,6 +75,10 @@ const BOOSTER_SCAN_COST: int = 200
 const BOOSTER_PULSE_COST: int = 250
 const BOOSTER_SCAN_REVEAL_COUNT: int = 10
 const BOOSTER_PULSE_EAT_COUNT: int = 10
+
+## Спецэффекты минералов (лёд / сплав / печать) — GridCell.Modifier.
+const FROST_HITS_DEFAULT: int = 2
+const SEAL_SIGNAL_COUNT_DEFAULT: int = 3
 
 enum LevelDifficulty { NORMAL = 0, HARD = 1, EXTREME = 2 }
 
