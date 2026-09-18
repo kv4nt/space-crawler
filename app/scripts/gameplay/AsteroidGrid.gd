@@ -33,6 +33,7 @@ func _init(config: Dictionary) -> void:
 	hide_interior = config.get("hidden_layers", 0) > 0
 	var color_palette: Array = config.get("color_palette", [])
 	_load_pattern(config.get("pattern", []), color_palette)
+	_apply_special_modifiers(config)
 
 
 func _load_pattern(pattern: Array, color_palette: Array = []) -> void:
@@ -171,6 +172,8 @@ func _is_collectible_at(pos: Vector2i, target_color: int) -> bool:
 		return false
 	if not is_color_unlocked(target_color):
 		return false
+	if cell.is_sealed():
+		return false
 	return _is_on_surface(pos.x, pos.y)
 
 
@@ -231,14 +234,119 @@ func count_collectibles_eaten() -> int:
 	return initial_pixel_count - count_filled_total()
 
 
+## Съедает клетку. Мёрзлые клетки теряют один "хит" льда вместо немедленной очистки.
+## Сплавленные клетки сначала снимают верхний слой и превращаются в клетку fused_color.
 func eat_cell(pos: Vector2i, recompute: bool = true) -> void:
 	var cell := get_cell(pos.x, pos.y)
 	if cell == null or cell.state != GridCell.State.EXPOSED:
 		return
+
+	if cell.is_frozen():
+		cell.frost_hits = maxi(cell.frost_hits - 1, 0)
+		unreserve_cell(pos)
+		return
+
+	if cell.has_fused_partner():
+		var partner_color := cell.fused_color
+		cell.fused_color = -1
+		cell.color = partner_color
+		cell.modifier = GridCell.Modifier.NONE
+		unreserve_cell(pos)
+		if recompute:
+			_recompute_exposure()
+		return
+
+	var eaten_color := cell.color
 	cell.state = GridCell.State.EMPTY
 	unreserve_cell(pos)
+	_release_seal_neighbors(pos, eaten_color)
 	if recompute:
 		_recompute_exposure()
+
+
+## Опечатанные жилы "слышат" добычу сигнального цвета рядом и постепенно раскрываются.
+func _release_seal_neighbors(pos: Vector2i, eaten_color: int) -> void:
+	for neighbor: Vector2i in get_neighbors(pos.x, pos.y):
+		var cell := get_cell(neighbor.x, neighbor.y)
+		if cell == null or cell.modifier != GridCell.Modifier.SEALED:
+			continue
+		if cell.seal_signal_color != eaten_color:
+			continue
+		if cell.seal_signal_progress >= cell.seal_signal_needed:
+			continue
+		cell.seal_signal_progress += 1
+
+
+## Процедурно расставляет спецэффекты минералов по данным уровня (GameBalance/LevelGenerator).
+func _apply_special_modifiers(config: Dictionary) -> void:
+	var frost_n: int = int(config.get("frost_cell_count", 0))
+	var fused_n: int = int(config.get("fused_pair_count", 0))
+	var sealed_n: int = int(config.get("sealed_cell_count", 0))
+	if frost_n <= 0 and fused_n <= 0 and sealed_n <= 0:
+		return
+
+	var mod_rng := RandomNumberGenerator.new()
+	mod_rng.seed = int(config.get("modifier_seed", 1))
+
+	var eligible: Array[Vector2i] = []
+	for y in range(height):
+		for x in range(width):
+			var cell := get_cell(x, y)
+			if cell.state == GridCell.State.EMPTY:
+				continue
+			if count_filled_of_color(cell.color) <= 1:
+				continue
+			eligible.append(Vector2i(x, y))
+	if eligible.is_empty():
+		return
+	_shuffle_positions(eligible, mod_rng)
+
+	var idx := 0
+	for _i in range(frost_n):
+		if idx >= eligible.size():
+			break
+		var pos := eligible[idx]
+		idx += 1
+		var cell := get_cell(pos.x, pos.y)
+		cell.modifier = GridCell.Modifier.FROZEN
+		cell.frost_hits = GameBalance.FROST_HITS_DEFAULT
+
+	for _i in range(fused_n):
+		if idx >= eligible.size():
+			break
+		var pos := eligible[idx]
+		idx += 1
+		var cell := get_cell(pos.x, pos.y)
+		var partner := mod_rng.randi_range(0, total_color_count - 1)
+		if partner == cell.color:
+			partner = (partner + 1) % total_color_count
+		cell.modifier = GridCell.Modifier.FUSED
+		cell.fused_color = partner
+
+	for _i in range(sealed_n):
+		if idx >= eligible.size():
+			break
+		var pos := eligible[idx]
+		idx += 1
+		var cell := get_cell(pos.x, pos.y)
+		var signal_color := cell.color
+		for neighbor: Vector2i in get_neighbors(pos.x, pos.y):
+			var ncell := get_cell(neighbor.x, neighbor.y)
+			if ncell.state != GridCell.State.EMPTY and ncell.color != cell.color:
+				signal_color = ncell.color
+				break
+		cell.modifier = GridCell.Modifier.SEALED
+		cell.seal_signal_color = signal_color
+		cell.seal_signal_needed = GameBalance.SEAL_SIGNAL_COUNT_DEFAULT
+		cell.seal_signal_progress = 0
+
+
+func _shuffle_positions(arr: Array, rng: RandomNumberGenerator) -> void:
+	for i in range(arr.size() - 1, 0, -1):
+		var j := rng.randi_range(0, i)
+		var tmp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = tmp
 
 
 func reserve_cell(pos: Vector2i) -> bool:

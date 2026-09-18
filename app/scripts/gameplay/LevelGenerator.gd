@@ -88,6 +88,25 @@ static func generate(global_id: int, sector: int, level_in_sector: int) -> Dicti
 		GameBalance.LevelDifficulty.HARD:
 			reward_bonus = 40
 
+	## Спецэффекты минералов (лёд / сплав / печать) — растут вместе со сложностью уровня.
+	var frost_cell_count := 0
+	var fused_pair_count := 0
+	var sealed_cell_count := 0
+	match difficulty:
+		GameBalance.LevelDifficulty.EXTREME:
+			frost_cell_count = 4
+			fused_pair_count = 2
+			sealed_cell_count = 3
+		GameBalance.LevelDifficulty.HARD:
+			frost_cell_count = 2
+			fused_pair_count = 1
+			sealed_cell_count = 2
+		_:
+			frost_cell_count = 0
+			fused_pair_count = 0
+			sealed_cell_count = 0
+	var modifier_seed := rng.randi()
+
 	return {
 		"id": global_id,
 		"sector": sector,
@@ -108,6 +127,10 @@ static func generate(global_id: int, sector: int, level_in_sector: int) -> Dicti
 		"background_index": bg_index,
 		"vending_columns": clampi(4 + global_id / 15, 4, 6),
 		"authored": from_authored,
+		"frost_cell_count": frost_cell_count,
+		"fused_pair_count": fused_pair_count,
+		"sealed_cell_count": sealed_cell_count,
+		"modifier_seed": modifier_seed,
 	}
 
 
