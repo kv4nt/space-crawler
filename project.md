@@ -1,6 +1,6 @@
 # Starvein: Frontier Protocol — Project Log
 
-> **Статус:** Food Hunt механика + жизни и бустеры за CR, 5 уровней.
+> **Статус:** Food Hunt механика + жизни и бустеры за CR, спецэффекты минералов (лёд/сплав/печать).
 > **Стек:** Godot 4.x Stable, GDScript, 2D. Portrait Android/iOS only.
 > **Референс-механика:** color-sort puzzle (Food Hunt–style), но оригинальный sci-fi сеттинг.
 
@@ -37,9 +37,10 @@ app/
 │   │   ├── AudioService.gd    # Music/SFX шины, процедурный звук
 │   │   └── LevelService.gd    # Загрузка уровней
 │   ├── gameplay/
-│   │   ├── AsteroidGrid.gd    # Pixel-art поле, exposure, поедание
-│   │   ├── GridCell.gd        # HIDDEN → EXPOSED → EMPTY
+│   │   ├── AsteroidGrid.gd    # Pixel-art поле, exposure, поедание, спецэффекты минералов
+│   │   ├── GridCell.gd        # HIDDEN → EXPOSED → EMPTY + Modifier (FROZEN/FUSED/SEALED)
 │   │   ├── SlotManager.gd     # Слоты флота + каскадное поедание
+│   │   ├── LevelGenerator.gd  # Процедурная генерация, включая счётчики спецэффектов
 │   │   └── LevelController.gd # UI + визуал + связка
 │   └── menu/MainMenu.gd
 └── data/levels/               # JSON уровней (этап 4+)
@@ -49,7 +50,7 @@ app/
 
 | Имя | Назначение |
 |-----|-----------|
-| GameBalance | Размер сетки, цвета, квоты, параметры warp |
+| GameBalance | Размер сетки, цвета, квоты, параметры warp, константы спецэффектов |
 | GameState | credits, lives, current_level, warp_core_seconds_left |
 | SaveService | Атомарное сохранение/загрузка |
 | AudioService | play_sfx, play_music, громкость |
@@ -60,8 +61,20 @@ app/
 | State | Цвет виден? | Можно съесть? |
 |-------|-------------|---------------|
 | HIDDEN | Нет (тёмный блок) | Нет |
-| EXPOSED | Да | Да (если цвет разблокирован и есть слот) |
+| EXPOSED | Да | Да (если цвет разблокирован, нет модификатора-блокера и есть слот) |
 | EMPTY | Нет (пусто) | — |
+
+## Спецэффекты минералов (GridCell.Modifier)
+
+| Модификатор | Механика | Где реализовано |
+|---|---|---|
+| FROZEN («мёрзлая жила») | Каждое попадание корабля снимает 1 `frost_hits` вместо немедленной очистки; клетка расчищается после `FROST_HITS_DEFAULT` (2) попаданий | `AsteroidGrid.eat_cell()`, визуал `GameTheme.cell_frozen()` |
+| FUSED («сросшаяся пара») | Первое попадание снимает верхний слой и превращает клетку в `fused_color`; собирается как обычная клетка второй раз | `AsteroidGrid.eat_cell()` |
+| SEALED («опечатанная жила») | Недоступна, пока рядом не съедено `SEAL_SIGNAL_COUNT_DEFAULT` (3) клеток сигнального цвета — считается через `get_neighbors()` в `eat_cell()` | `AsteroidGrid._is_collectible_at()`, `_release_seal_neighbors()`, визуал `GameTheme.cell_sealed()` |
+
+Количество эффектов на уровень растёт со сложностью (`LevelGenerator.generate()`): NORMAL — 0, HARD — 2 лёд/1 сплав/2 печать, EXTREME — 4/2/3. Позиции детерминированы через `modifier_seed`, эффекты не ставятся на клетки-одиночки своего цвета (чтобы не создавать тупиков).
+
+**Ограничение:** визуальная отрисовка модификаторов в `LevelController.refresh_cell_visual()` встраивается вручную (не автокоммитом) — файл 104 КБ, доступные инструменты чтения не гарантируют байт-точное восстановление отступов для безопасной полной перезаписи. Логика (`AsteroidGrid`/`GridCell`/`GameBalance`/`LevelGenerator`) и стили (`GameTheme.cell_frozen/cell_sealed`) запушены и работают независимо от статуса этой правки.
 
 ## Прогрессия уровней
 
@@ -91,13 +104,17 @@ app/
 | 3a. Visual feel | ✅ | Цвета, pulse, beams, particles, overlay |
 | 3b. Flight feel | ✅ | Polygon2D-корабли, tween рейсы |
 | 4. Menu+Audio+Save | ✅ | Меню, звук, сохранения, warp, 5 уровней |
+| 5. Спецэффекты минералов | ⏳ | Логика/данные/стили готовы; визуальный хук в LevelController — вручную |
 
 ## Следующие шаги (после 4)
 
-- **5. Level data JSON** — вынести уровни в data/levels/*.json
-- **6. Android polish** — safe areas, pause on background, touch feedback
-- **7. Map screen** — выбор уровня на карте секторов
-- **8. Monetization stub** — заглушка покупки warp (без реальных платежей)
+- **5. Спецэффекты минералов** — вставить визуальный хук в `LevelController.refresh_cell_visual()` (инструкция передана пользователю); проверить на HARD/EXTREME уровне.
+- **6. Бейдж сложности** — база готова (`GameTheme.hud_difficulty_*`, `update_difficulty_badge()`), нужен более выразительный визуал (иконки/анимация для EXTREME).
+- **7. Редизайн экрана победы/поражения** — сейчас использует чужой «деревянный» стиль из BoosterModalWood, нужен собственный sci-fi дизайн.
+- **8. Level data JSON** — вынести уровни в data/levels/*.json
+- **9. Android polish** — safe areas, pause on background, touch feedback
+- **10. Map screen** — выбор уровня на карте секторов
+- **11. Monetization stub** — заглушка покупки warp (без реальных платежей)
 
 ## Проверка
 
@@ -108,10 +125,13 @@ app/
 5. Warp Core → ускорение ×2, таймер в HUD.
 6. Победа: все пиксели съедены. Поражение: все слоты заблокированы.
 7. Перезапуск сохраняет кредиты и warp-статус.
+8. HARD/EXTREME уровень (level_in_sector % 3 == 0 или % 5 == 0) → часть клеток не исчезает с первого попадания (лёд) или меняет цвет вместо очистки (сплав); часть недоступна до добычи сигнального цвета рядом (печать).
 
 ## Журнал решений
 
 - **2026-08-31:** Pixel-art уровни: курочка, лодка, звезда, чёрная дыра, галактика.
 - **2026-08-31:** Механика Food Hunt — SlotManager, pixel-art паттерны, каскадное поедание, победа при очистке поля.
 - **2026-08-31:** Меню v2 — Food Hunt стиль: пиксельный астероид, стеки минералов, зелёная кнопка «НАЧАТЬ ИГРУ».
+- **2026-09-18:** Спецэффекты минералов (лёд/сплав/печать) — `GridCell.Modifier`, обработка в `AsteroidGrid.eat_cell()`, процедурная расстановка по сложности в `LevelGenerator`, стили `GameTheme.cell_frozen/cell_sealed`. Визуальный хук в `LevelController` — ручная вставка (см. ограничение выше).
+- **2026-09-18:** Зафиксировано техническое ограничение: `LevelController.gd` (104 КБ) и любые файлы такого объёма нельзя безопасно перезаписывать целиком через доступные инструменты — только точечные ручные правки по указанным строкам.
 - Аудио: процедурная генерация WAV в runtime (без внешних ассетов на MVP).
