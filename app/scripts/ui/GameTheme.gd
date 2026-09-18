@@ -1305,3 +1305,27 @@ static func apply_booster_modal_buy_button(btn: Button) -> void:
 	btn.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	btn.add_theme_color_override("font_disabled_color", Color(0.88, 0.94, 0.90, 1.0))
 	btn.add_theme_font_size_override("font_size", 34)
+
+
+# --- Спецэффекты минералов (лёд / сплав / печать) ---
+
+static func cell_frozen(base_color: Color) -> StyleBoxFlat:
+	var s := StyleBoxFlat.new()
+	s.bg_color = base_color.lerp(Color(0.75, 0.92, 1.0), 0.55)
+	s.set_corner_radius_all(8)
+	s.border_color = Color(0.85, 0.97, 1.0, 0.9)
+	s.set_border_width_all(3)
+	s.shadow_color = Color(0.6, 0.85, 1.0, 0.45)
+	s.shadow_size = 6
+	return s
+
+
+static func cell_sealed(base_color: Color) -> StyleBoxFlat:
+	var s := StyleBoxFlat.new()
+	s.bg_color = base_color.darkened(0.35)
+	s.set_corner_radius_all(6)
+	s.border_color = Color(0.85, 0.30, 0.85, 0.85)
+	s.set_border_width_all(3)
+	s.shadow_color = Color(0.55, 0.10, 0.55, 0.4)
+	s.shadow_size = 6
+	return s
