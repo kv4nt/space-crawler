@@ -145,6 +145,7 @@ func _recompute_exposure() -> void:
 				cell.state = GridCell.State.HIDDEN
 			else:
 				cell.state = GridCell.State.EXPOSED
+	_auto_release_stuck_seals()
 
 
 func is_surface(x: int, y: int) -> bool:
@@ -277,6 +278,43 @@ func _release_seal_neighbors(pos: Vector2i, eaten_color: int) -> void:
 		cell.seal_signal_progress += 1
 
 
+## Защита от софтлока: если ВСЕ оставшиеся клетки разблокированного цвета
+## опечатаны (сигнальный цвет недостижим), снимаем печать со всех клеток этого цвета сразу.
+func _auto_release_stuck_seals() -> void:
+	var color_stuck_cache: Dictionary = {}
+	for y in range(height):
+		for x in range(width):
+			var cell := get_cell(x, y)
+			if cell.state == GridCell.State.EMPTY:
+				continue
+			if cell.modifier != GridCell.Modifier.SEALED:
+				continue
+			if not cell.is_sealed():
+				continue
+			if not is_color_unlocked(cell.color):
+				continue
+			if not color_stuck_cache.has(cell.color):
+				color_stuck_cache[cell.color] = not _has_unsealed_collectible_of_color(cell.color)
+			if color_stuck_cache[cell.color]:
+				cell.seal_signal_progress = cell.seal_signal_needed
+
+
+func _has_unsealed_collectible_of_color(target_color: int) -> bool:
+	for y in range(height):
+		for x in range(width):
+			var cell := get_cell(x, y)
+			if cell.state != GridCell.State.EXPOSED:
+				continue
+			if cell.color != target_color:
+				continue
+			if cell.modifier == GridCell.Modifier.SEALED and cell.is_sealed():
+				continue
+			if not _is_on_surface(x, y):
+				continue
+			return true
+	return false
+
+
 ## Процедурно расставляет спецэффекты минералов по данным уровня (GameBalance/LevelGenerator).
 func _apply_special_modifiers(config: Dictionary) -> void:
 	var frost_n: int = int(config.get("frost_cell_count", 0))
@@ -323,22 +361,33 @@ func _apply_special_modifiers(config: Dictionary) -> void:
 		cell.modifier = GridCell.Modifier.FUSED
 		cell.fused_color = partner
 
-	for _i in range(sealed_n):
-		if idx >= eligible.size():
-			break
+	# Печать: сигнальный цвет обязан отличаться от собственного (иначе клетка
+	# может блокировать сама себя, если это последняя доступная жила своего цвета).
+	# Не более одной печати на цвет — снижает риск полной блокировки цвета.
+	var sealed_colors_used: Dictionary = {}
+	var sealed_placed := 0
+	while sealed_placed < sealed_n and idx < eligible.size():
 		var pos := eligible[idx]
 		idx += 1
 		var cell := get_cell(pos.x, pos.y)
-		var signal_color := cell.color
+		if sealed_colors_used.has(cell.color):
+			continue
+		if count_filled_of_color(cell.color) <= 2:
+			continue
+		var signal_color := -1
 		for neighbor: Vector2i in get_neighbors(pos.x, pos.y):
 			var ncell := get_cell(neighbor.x, neighbor.y)
 			if ncell.state != GridCell.State.EMPTY and ncell.color != cell.color:
 				signal_color = ncell.color
 				break
+		if signal_color == -1:
+			continue
 		cell.modifier = GridCell.Modifier.SEALED
 		cell.seal_signal_color = signal_color
 		cell.seal_signal_needed = GameBalance.SEAL_SIGNAL_COUNT_DEFAULT
 		cell.seal_signal_progress = 0
+		sealed_colors_used[cell.color] = true
+		sealed_placed += 1
 
 
 func _shuffle_positions(arr: Array, rng: RandomNumberGenerator) -> void:
