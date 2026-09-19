@@ -441,24 +441,30 @@ func _build_top_hud() -> void:
 
 	_difficulty_pill = PanelContainer.new()
 	_difficulty_pill.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_difficulty_pill.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_difficulty_pill.custom_minimum_size = Vector2(0, 48)
 	_difficulty_label = Label.new()
 	_difficulty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_difficulty_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_difficulty_label.add_theme_font_size_override("font_size", 22)
+	_difficulty_label.add_theme_font_size_override("font_size", 24)
 	_difficulty_label.add_theme_color_override("font_outline_color", Color(0.08, 0.10, 0.14, 0.9))
 	_difficulty_label.add_theme_constant_override("outline_size", 2)
 	var diff_pad := MarginContainer.new()
-	diff_pad.add_theme_constant_override("margin_left", 5)
-	diff_pad.add_theme_constant_override("margin_right", 5)
-	diff_pad.add_theme_constant_override("margin_top", 1)
-	diff_pad.add_theme_constant_override("margin_bottom", 1)
+	diff_pad.add_theme_constant_override("margin_left", 16)
+	diff_pad.add_theme_constant_override("margin_right", 16)
+	diff_pad.add_theme_constant_override("margin_top", 5)
+	diff_pad.add_theme_constant_override("margin_bottom", 5)
 	diff_pad.add_child(_difficulty_label)
 	_difficulty_pill.add_child(diff_pad)
-	level_row.add_child(_difficulty_pill)
 	_update_difficulty_badge()
 
 	level_chip.add_child(level_row)
 	row.add_child(level_chip)
+
+	var diff_gap := Control.new()
+	diff_gap.custom_minimum_size = Vector2(12, 0)
+	row.add_child(diff_gap)
+	row.add_child(_difficulty_pill)
 
 	var center_spacer := Control.new()
 	center_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -656,7 +662,7 @@ func _update_difficulty_badge() -> void:
 	match GameState.get_level_difficulty():
 		GameBalance.LevelDifficulty.EXTREME:
 			_difficulty_pill.add_theme_stylebox_override("panel", GameTheme.hud_difficulty_extreme())
-			_difficulty_label.text = "💀 ЭКСТРЕМ."
+			_difficulty_label.text = "💀 ЭКСТРЕМАЛЬНЫЙ"
 			_difficulty_label.add_theme_color_override("font_color", Color(1.0, 0.55, 0.62))
 		GameBalance.LevelDifficulty.HARD:
 			_difficulty_pill.add_theme_stylebox_override("panel", GameTheme.hud_difficulty_hard())
