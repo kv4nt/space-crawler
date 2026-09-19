@@ -88,18 +88,20 @@ static func generate(global_id: int, sector: int, level_in_sector: int) -> Dicti
 		GameBalance.LevelDifficulty.HARD:
 			reward_bonus = 40
 
-	## Спецэффекты минералов (лёд / сплав / печать) — растут вместе со сложностью уровня.
+	## Спецэффекты минералов (лёд / печать) — растут вместе со сложностью уровня.
+	## FUSED (сплав) отключён: меняет цвет клетки после старта уровня, что ломает
+	## зафиксированные при старте квоты ColorVending. Вернётся после интеграции с квотами.
 	var frost_cell_count := 0
 	var fused_pair_count := 0
 	var sealed_cell_count := 0
 	match difficulty:
 		GameBalance.LevelDifficulty.EXTREME:
 			frost_cell_count = 4
-			fused_pair_count = 2
+			fused_pair_count = 0
 			sealed_cell_count = 3
 		GameBalance.LevelDifficulty.HARD:
 			frost_cell_count = 2
-			fused_pair_count = 1
+			fused_pair_count = 0
 			sealed_cell_count = 2
 		_:
 			frost_cell_count = 0
