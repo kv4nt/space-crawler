@@ -96,11 +96,11 @@ static func generate(global_id: int, sector: int, level_in_sector: int) -> Dicti
 	var sealed_cell_count := 0
 	match difficulty:
 		GameBalance.LevelDifficulty.EXTREME:
-			frost_cell_count = 4
+			frost_cell_count = 0
 			fused_pair_count = 0
 			sealed_cell_count = 3
 		GameBalance.LevelDifficulty.HARD:
-			frost_cell_count = 2
+			frost_cell_count = 0
 			fused_pair_count = 0
 			sealed_cell_count = 2
 		_:
